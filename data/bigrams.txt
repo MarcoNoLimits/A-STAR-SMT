@@ -1,0 +1,6 @@
+<s> le 0.69
+le chat 0.22
+chat mange 0.51
+le mange 1.60
+mange le 2.30
+<s> chat 1.20
