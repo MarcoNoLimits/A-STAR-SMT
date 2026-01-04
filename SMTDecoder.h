@@ -19,15 +19,18 @@ struct State {
   double g_cost;
   double h_cost;
   double f_cost;
+  int last_source_index; // Track the index of the previously placed word for
+                         // distortion
 
-  State() : g_cost(0.0), h_cost(0.0), f_cost(0.0) { covered_mask.reset(); }
+  State() : g_cost(0.0), h_cost(0.0), f_cost(0.0), last_source_index(-1) {
+    covered_mask.reset();
+  }
 };
 
 class LanguageModel {
 public:
   bool load(const string &filepath);
-  double get_transition_cost(const string &context,
-                             const string &word) const;
+  double get_transition_cost(const string &context, const string &word) const;
   double get_min_incoming_cost(const string &word) const;
 
 private:
@@ -45,8 +48,7 @@ private:
   unordered_map<string, string> translations;
 };
 
-vector<string>
-solve_permutation(const vector<string> &source_words,
-                  const LanguageModel &lm);
+vector<string> solve_permutation(const vector<string> &source_words,
+                                 const LanguageModel &lm);
 
 #endif // SMT_DECODER_H

@@ -5,7 +5,6 @@
 #include <limits>
 using namespace std;
 
-
 // =========================================================
 // LanguageModel Implementation
 // =========================================================
@@ -42,8 +41,7 @@ bool LanguageModel::load(const string &filepath) {
 double LanguageModel::get_transition_cost(const string &context,
                                           const string &word) const {
   string key = context + "|" + word;
-  unordered_map<string, double>::const_iterator it =
-      bigram_costs.find(key);
+  unordered_map<string, double>::const_iterator it = bigram_costs.find(key);
   if (it != bigram_costs.end()) {
     return it->second;
   }
@@ -77,8 +75,7 @@ bool Dictionary::load(const string &filepath) {
 }
 
 string Dictionary::translate(const string &en_word) const {
-  unordered_map<string, string>::const_iterator it =
-      translations.find(en_word);
+  unordered_map<string, string>::const_iterator it = translations.find(en_word);
   if (it != translations.end()) {
     return it->second;
   }
@@ -90,8 +87,7 @@ string Dictionary::translate(const string &en_word) const {
 // =========================================================
 
 double calculate_heuristic(const vector<string> &words,
-                           const bitset<32> &covered,
-                           const LanguageModel &lm) {
+                           const bitset<32> &covered, const LanguageModel &lm) {
   double h_val = 0.0;
   int n = (int)words.size(); // Explicit cast to int
 
@@ -109,9 +105,8 @@ struct StateComparator {
   }
 };
 
-vector<string>
-solve_permutation(const vector<string> &source_words,
-                  const LanguageModel &lm) {
+vector<string> solve_permutation(const vector<string> &source_words,
+                                 const LanguageModel &lm) {
   int n = (int)source_words.size();
 
   priority_queue<State, vector<State>, StateComparator> open_set;
@@ -151,7 +146,20 @@ solve_permutation(const vector<string> &source_words,
         string curr_word = source_words[i];
 
         double trans_cost = lm.get_transition_cost(prev_word, curr_word);
-        next_state.g_cost += trans_cost;
+
+        // Distortion Cost: |index_curr - index_prev - 1|
+        int prev_index = current.last_source_index;
+        // If first word (prev_index == -1), we usually assume it follows a
+        // virtual start at position -1, so 0 - (-1) - 1 = 0 dist. Or treat
+        // start as separate. Let's assume monotonic start means i=0 is cost 0.
+        // |0 - (-1) - 1| = 0.
+        // If we pick i=2 first: |2 - (-1) - 1| = 2.
+        int dist = std::abs(i - prev_index - 1);
+
+        next_state.g_cost +=
+            trans_cost + (double)dist; // Add distortion to g_cost
+        next_state.last_source_index = i;
+
         next_state.h_cost =
             calculate_heuristic(source_words, next_state.covered_mask, lm);
         next_state.f_cost = next_state.g_cost + next_state.h_cost;
