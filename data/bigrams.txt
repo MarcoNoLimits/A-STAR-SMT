@@ -4,3 +4,6 @@ chat mange 0.51
 le mange 1.60
 mange le 2.30
 <s> chat 1.20
+le chien 0.50
+chien mange 0.10
+mange chat 0.10

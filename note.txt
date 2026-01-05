@@ -1,0 +1,7 @@
+Personnal note.
+I suggest that we modify the cost details, I want that the usual cost of the bigram Should 
+be considered as the heuristic h(x) (Giving information on how much this words follow each 
+other), and that the norm normal cost (c(x)) should be taken from the order that the words 
+are given in the input so that if the order is not the best, the cost will be higher.
+(For example: if in the input dog is said before cat there is a bigger chance that the 
+output will translate it as "le chien mange chat" instead of "le chat mange chien".)

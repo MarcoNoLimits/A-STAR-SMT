@@ -48,7 +48,15 @@ private:
   unordered_map<string, string> translations;
 };
 
-vector<string> solve_permutation(const vector<string> &source_words,
-                                 const LanguageModel &lm);
+struct TranslationResult {
+  vector<string> words;
+  double final_f_cost;
+  double final_g_cost;
+  double final_h_cost;
+  double initial_h_cost;
+};
+
+TranslationResult solve_permutation(const vector<string> &source_words,
+                                    const LanguageModel &lm);
 
 #endif // SMT_DECODER_H

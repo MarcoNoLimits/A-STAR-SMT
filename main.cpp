@@ -22,7 +22,7 @@ int main() {
   }
 
   // 2. Input Sentence
-  string english_sentence = "the cat eats";
+  string english_sentence = "the dog eats cat";
   cout << "Source English: " << english_sentence << endl;
 
   // 3. Simple Tokenization & Translation
@@ -39,8 +39,8 @@ int main() {
       if (!current_word.empty()) {
         string french_word = dict.translate(current_word);
         bag_of_french_words.push_back(french_word);
-        cout << "  Mapped '" << current_word << "' -> '" << french_word
-             << "'" << endl;
+        cout << "  Mapped '" << current_word << "' -> '" << french_word << "'"
+             << endl;
         current_word = "";
       }
     } else {
@@ -57,14 +57,20 @@ int main() {
 
   // 4. Decode
   cout << "Decoding optimal permutation..." << endl;
-  vector<string> result = solve_permutation(bag_of_french_words, lm);
+  TranslationResult result = solve_permutation(bag_of_french_words, lm);
 
   // 5. Output Result
   cout << "Translated and Reordered: ";
-  for (int i = 0; i < (int)result.size(); ++i) {
-    cout << result[i] << " ";
+  for (int i = 0; i < (int)result.words.size(); ++i) {
+    cout << result.words[i] << " ";
   }
   cout << endl;
+
+  // Output Costs
+  cout << "Final Costs:" << endl;
+  cout << "  Initial Heuristic (Estimate): " << result.initial_h_cost << endl;
+  cout << "  Final G Cost (Actual): " << result.final_g_cost << endl;
+  cout << "  Final F Cost (Total): " << result.final_f_cost << endl;
 
   return 0;
 }

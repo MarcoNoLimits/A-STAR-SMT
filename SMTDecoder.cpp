@@ -1,8 +1,6 @@
 #include "SMTDecoder.h"
-#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <limits>
 using namespace std;
 
 // =========================================================
@@ -105,8 +103,8 @@ struct StateComparator {
   }
 };
 
-vector<string> solve_permutation(const vector<string> &source_words,
-                                 const LanguageModel &lm) {
+TranslationResult solve_permutation(const vector<string> &source_words,
+                                    const LanguageModel &lm) {
   int n = (int)source_words.size();
 
   priority_queue<State, vector<State>, StateComparator> open_set;
@@ -117,6 +115,8 @@ vector<string> solve_permutation(const vector<string> &source_words,
       calculate_heuristic(source_words, start_node.covered_mask, lm);
   start_node.f_cost = start_node.g_cost + start_node.h_cost;
 
+  double initial_h_estimate = start_node.h_cost; // Capture initial heuristic
+
   open_set.push(start_node);
 
   while (!open_set.empty()) {
@@ -124,11 +124,15 @@ vector<string> solve_permutation(const vector<string> &source_words,
     open_set.pop();
 
     if (current.covered_mask.count() == n) {
-      vector<string> result;
+      TranslationResult result;
       for (int i = 0; i < (int)current.sequence.size(); ++i) {
         int original_index = current.sequence[i];
-        result.push_back(source_words[original_index]);
+        result.words.push_back(source_words[original_index]);
       }
+      result.final_f_cost = current.f_cost;
+      result.final_g_cost = current.g_cost;
+      result.final_h_cost = current.h_cost;
+      result.initial_h_cost = initial_h_estimate;
       return result;
     }
 
@@ -169,5 +173,5 @@ vector<string> solve_permutation(const vector<string> &source_words,
     }
   }
 
-  return vector<string>(); // Return empty vector
+  return TranslationResult(); // Return empty result
 }
