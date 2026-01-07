@@ -6,4 +6,9 @@ mange le 2.30
 <s> chat 1.20
 le chien 0.50
 chien mange 0.10
-mange chat 0.10
+mange chat 0.30
+chat noir 0.11
+chat poursuit 0.51
+chien poursuit 0.11
+poursuit chat 0.51
+

@@ -3,3 +3,5 @@ cat chat
 eats mange
 dog chien
 runs court
+black noir
+chase poursuit

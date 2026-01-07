@@ -8,47 +8,51 @@ using namespace std;
 int main() {
   cout << "Initializing SMT Decoder..." << endl;
 
-  // 1. Load Models
+  // 1. Load Model and Dictionary
   Dictionary dict;
-  if (!dict.load("data/dict.txt")) {
+  if (!dict.load("data/dict.txt")) 
+  {
     cerr << "Error: Could not load data/dict.txt" << endl;
     return 1;
   }
 
   LanguageModel lm;
-  if (!lm.load("data/bigrams.txt")) {
+  if (!lm.load("data/bigrams.txt")) 
+  {
     cerr << "Error: Could not load data/bigrams.txt" << endl;
     return 1;
   }
 
   // 2. Input Sentence
-  string english_sentence = "the dog eats cat";
+  string english_sentence = "the dog chase cat";
   cout << "Source English: " << english_sentence << endl;
 
-  // 3. Simple Tokenization & Translation
+  // 3. Word by word translation
   vector<string> bag_of_french_words;
 
-  // Manual tokenization to avoid stringstream if desired,
-  // or just keep stringstream if simple enough.
-  // User asked to avoid stringstream.
-  // Let's implement a simple manual splitter.
   string current_word = "";
-  for (int i = 0; i < (int)english_sentence.length(); ++i) {
+  for (int i = 0; i < (int)english_sentence.length(); i++) 
+  {
     char c = english_sentence[i];
-    if (c == ' ') {
-      if (!current_word.empty()) {
+    if (c == ' ') 
+    {
+      if (!current_word.empty()) 
+      {
         string french_word = dict.translate(current_word);
         bag_of_french_words.push_back(french_word);
         cout << "  Mapped '" << current_word << "' -> '" << french_word << "'"
              << endl;
         current_word = "";
       }
-    } else {
+    } else 
+    {
       current_word += c;
     }
   }
+
   // Push last word
-  if (!current_word.empty()) {
+  if (!current_word.empty()) 
+  {
     string french_word = dict.translate(current_word);
     bag_of_french_words.push_back(french_word);
     cout << "  Mapped '" << current_word << "' -> '" << french_word << "'"
@@ -61,7 +65,8 @@ int main() {
 
   // 5. Output Result
   cout << "Translated and Reordered: ";
-  for (int i = 0; i < (int)result.words.size(); ++i) {
+  for (int i = 0; i < (int)result.words.size(); i++) 
+  {
     cout << result.words[i] << " ";
   }
   cout << endl;

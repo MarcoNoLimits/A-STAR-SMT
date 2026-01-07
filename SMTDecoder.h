@@ -13,7 +13,8 @@
 #include <vector>
 using namespace std;
 
-struct State {
+struct State 
+{
   vector<int> sequence;
   bitset<32> covered_mask;
   double g_cost;
@@ -22,12 +23,20 @@ struct State {
   int last_source_index; // Track the index of the previously placed word for
                          // distortion
 
-  State() : g_cost(0.0), h_cost(0.0), f_cost(0.0), last_source_index(-1) {
+  State() : g_cost(0.0), h_cost(0.0), f_cost(0.0), last_source_index(-1) 
+  {
     covered_mask.reset();
+  }
+
+  // Comparator for priority queue
+  bool operator<(const State &other) const 
+  {
+    return f_cost > other.f_cost;
   }
 };
 
-class LanguageModel {
+class LanguageModel 
+{
 public:
   bool load(const string &filepath);
   double get_transition_cost(const string &context, const string &word) const;
@@ -39,7 +48,8 @@ private:
   double default_cost = 10.0;
 };
 
-class Dictionary {
+class Dictionary 
+{
 public:
   bool load(const string &filepath);
   string translate(const string &en_word) const;
@@ -48,7 +58,8 @@ private:
   unordered_map<string, string> translations;
 };
 
-struct TranslationResult {
+struct TranslationResult 
+{
   vector<string> words;
   double final_f_cost;
   double final_g_cost;
@@ -59,4 +70,4 @@ struct TranslationResult {
 TranslationResult solve_permutation(const vector<string> &source_words,
                                     const LanguageModel &lm);
 
-#endif // SMT_DECODER_H
+#endif
