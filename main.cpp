@@ -24,7 +24,7 @@ int main() {
   }
 
   // 2. Input Sentence
-  string english_sentence = "the dog chase cat";
+  string english_sentence = "the black cat ";
   cout << "Source English: " << english_sentence << endl;
 
   // 3. Word by word translation
